@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Messages</title>
+    <style>
+        div#header{
+            background-color: burlywood;
+            width: 100%;
+            text-align: center;
+            position: absolute;
+            left: 0;
+        }
+        div.contentContainer1{
+            max-width: 800px;    /* width of center column */
+            margin: 0 auto;      /* centers it horizontally */
+            background-color: #fff;
+            /*padding: 2rem;*/
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            min-height: 100vh;   /* optional: full viewport height */
+
+        }
+
+        div#contentStream{
+            background-color: lightblue;
+            padding: 0.3rem;
+        }
+
+        div.empty-top{
+            height: 6em;
+        }
+
+        td.messageProfile {
+            width: 20%;
+        }
+
+        div.profileDiv{
+            display: flex;
+            flex-direction: column;
+            padding: 0.5em;
+            align-items: center;
+        }
+
+        table.messageBox {
+            width: 100%;
+            background-color: aliceblue;
+        }
+
+        img.profile-picture {
+            width: 64px;
+            height: 64px;
+        }
+
+        div.messageBox {
+            padding: 0.2em;
+        }
+
+    </style>
+
+    <script>
+        function createMessageBox(messageResponse){
+            let username = messageResponse.username;
+            let profile = messageResponse.profile;
+            let message = messageResponse.message;
+            let messageId = messageResponse.id;
+
+            let topBox = document.createElement('div');
+            topBox.classList.add('messageBox');
+            topBox.classList.add('message-id-'+messageId);
+            let messageTable = document.createElement('table');
+            messageTable.classList.add('messageBox');
+            let tableRow = document.createElement('tr');
+            let profileData  = document.createElement('td');
+            profileData.classList.add('messageProfile');
+            let profileDiv = document.createElement('div');
+            profileDiv.classList.add('profileDiv');
+            let usernameSpan = document.createElement('span');
+            usernameSpan.classList.add('username-display');
+            usernameSpan.textContent = username
+            profileDiv.appendChild(usernameSpan);
+            let profileImage = document.createElement('img');
+            profileImage.classList.add('profile-picture');
+            profileImage.src = profile;
+            profileDiv.appendChild(profileImage);
+            profileData.appendChild(profileDiv)
+            tableRow.appendChild(profileData);
+            let messageData = document.createElement('div');
+            messageData.classList.add('messageMessage');
+            let messageP = document.createElement('p');
+            messageP.textContent = message;
+            messageData.appendChild(messageP);
+            tableRow.appendChild(messageData);
+            messageTable.appendChild(tableRow);
+            topBox.appendChild(messageTable);
+
+            return topBox;
+        }
+
+        let tmpMessage = {
+            username: "USERNAME HERE",
+            profile: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IB2cksfwAAAARnQU1BAACxjwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB+kLCxQmKccNRh4AAAJtSURBVHja7Vq5SgRBEH2z67FeCCIIIniBGJiIrn6BgoGRgWAi5uIfCILiZxj4ARoJKmIsiBoZqCiK15rJBp67tEkPyLD2zlE13eP0gwIx6Hqvqrqmq1jAwsLCwsKCG00AtgEIn7YFoDHpopcCCK5mi1wkHYYzSwCyTHzLAGooD8wQnnUos5VlrKqs9HFgUqmPEZZ6UBvRfQW+qUsyJIe6uK/ApsxAjQEVWCu5bMTl8EljyVezB27xeYPFk/WFv9CZAPGudXA0QZGwh5hDGYCkifetz89XoJjg5/hr1AB0AWhJcABaZe8KDermtOPD5y6D31B35B1ATuPgRdl33uRIHugKUIk/CvnkdgCcEHEIvFu4Iyq9CwLy10RcboOUpdBU9oibT6UrMGTgroFqxzDoJ0OmZZ+VVwY8mGA4czqup6IwMPts3LgqIDHwBqA5BZobVAFYSEEAFlQBmExBAJQan7mHD4ImSLo39FZAGxHRMwbx50TntKs+V0XC+d/Uh1BR7gkqVsCVgYSpz7pUXYF94qytEJyxTsxJqXGUYRszE4HsLAOf4Tg6rdeOQog/ZuICHQFwLe/D/zgzB60BcO0UwJRcu+Xk32cx+Y5tH2Aqqk6DhX8s/tHvY0WkIfsm7AM+pBmzD3DRy+BrV2bgtzVI8/5/j8F/t47JSwDoj0B6IM7Pnxd9ER3OEWZvPiKXnrATm6BqNpqHIicKUWGIeBY+fr4CqwaJD+pjmcrpmsY1WNgmvUzt8EXhrFZDAOoVfJ65nJah4ceJChQq8ClxNyyh4d6z8clEbEI3Brzv73Ul48ugIecTFhYWFhYWgfEDhCqGPpbzQpsAAAAASUVORK5CYII=",
+            message: "sample message text. how sample do you message for your text",
+            id: 0
+        }
+
+        window.onload = e =>{
+            let pageMessageObject = createMessageBox(tmpMessage);
+            let contentStream = document.getElementById('contentStream');
+            contentStream.appendChild(pageMessageObject);
+        }
+
+    </script>
+</head>
+<body>
+    <div id="header">
+        <h1>Fantastic Message Board</h1>
+    </div>
+    <div class = "contentContainer1">
+        <div class = "contentContainer2">
+            <div class="empty-top"></div>
+            <!-- message input here-->
+            <div id="contentStream">
+
+
+<!--                <div class="messageBox">-->
+<!--                    <table class="messageBox">-->
+<!--                        <tr>-->
+<!--                            <td class="messageProfile">-->
+<!--                                <div class="profileDiv">-->
+<!--                                    <span class = "username-display">USERNAME HERE</span>-->
+<!--                                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IB2cksfwAAAARnQU1BAACxjwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB+kLCxQmKccNRh4AAAJtSURBVHja7Vq5SgRBEH2z67FeCCIIIniBGJiIrn6BgoGRgWAi5uIfCILiZxj4ARoJKmIsiBoZqCiK15rJBp67tEkPyLD2zlE13eP0gwIx6Hqvqrqmq1jAwsLCwsKCG00AtgEIn7YFoDHpopcCCK5mi1wkHYYzSwCyTHzLAGooD8wQnnUos5VlrKqs9HFgUqmPEZZ6UBvRfQW+qUsyJIe6uK/ApsxAjQEVWCu5bMTl8EljyVezB27xeYPFk/WFv9CZAPGudXA0QZGwh5hDGYCkifetz89XoJjg5/hr1AB0AWhJcABaZe8KDermtOPD5y6D31B35B1ATuPgRdl33uRIHugKUIk/CvnkdgCcEHEIvFu4Iyq9CwLy10RcboOUpdBU9oibT6UrMGTgroFqxzDoJ0OmZZ+VVwY8mGA4czqup6IwMPts3LgqIDHwBqA5BZobVAFYSEEAFlQBmExBAJQan7mHD4ImSLo39FZAGxHRMwbx50TntKs+V0XC+d/Uh1BR7gkqVsCVgYSpz7pUXYF94qytEJyxTsxJqXGUYRszE4HsLAOf4Tg6rdeOQog/ZuICHQFwLe/D/zgzB60BcO0UwJRcu+Xk32cx+Y5tH2Aqqk6DhX8s/tHvY0WkIfsm7AM+pBmzD3DRy+BrV2bgtzVI8/5/j8F/t47JSwDoj0B6IM7Pnxd9ER3OEWZvPiKXnrATm6BqNpqHIicKUWGIeBY+fr4CqwaJD+pjmcrpmsY1WNgmvUzt8EXhrFZDAOoVfJ65nJah4ceJChQq8ClxNyyh4d6z8clEbEI3Brzv73Ul48ugIecTFhYWFhYWgfEDhCqGPpbzQpsAAAAASUVORK5CYII=" class="profile-picture" alt="profile image">-->
+<!--                                </div>-->
+<!--                            </td>-->
+<!--                            <td class="messageMessage">-->
+<!--                                <p>sample message text. how sample do you message for your text</p>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+<!--                    </table>-->
+<!--                </div>-->
+
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>
