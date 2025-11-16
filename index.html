@@ -59,6 +59,8 @@
 
     <script>
         let currentMessageId = -1;
+        let laoded = false
+        let endMessageId = -1;
 
         function createMessageBox(messageResponse){
             let username = messageResponse.username;
@@ -131,6 +133,7 @@
                 if(messages[i].messageID > messageObject.id && messages[i+1].messageID < messageObject.id) {
                     //if so then insert this message between the 2
                     contentStream.insertBefore(messageBox, messages[i+1]);
+                    return;
                 }
             }
             console.err("could not place message: "+messageObject.id)
@@ -148,8 +151,9 @@
                 return;
             }
             let messageNumberIn = messageCountObject.messages
-
+            laoded = true;
             if(currentMessageId === -1){
+                endMessageId = Math.max(messageNumberIn-15,0)
                 for(let i=Math.max(messageNumberIn-15,0);i<messageNumberIn;i++){
                     fetch("message?messageid="+i).then(response=>response.json()).then(json =>{
                         if(json.error){
@@ -178,17 +182,31 @@
             fetch("total_messages").then(response=>response.json()).then(json =>{
                 handleMessageCount(json);
             })
-            // fetch("message?messageid=0").then(response => response.json()).then(data => {
-            //     console.log(data)
-            //     if(data.error){
-            //         return console.log(data)
-            //     }
-            //     let pageMessageObject = createMessageBox(data);
-            //     let contentStream = document.getElementById('contentStream');
-            //     contentStream.appendChild(pageMessageObject);
-            // });
 
         }
+
+        window.addEventListener('scroll', function() {
+            // Calculate the current scroll position including the viewport height
+            const scrollPosition = window.innerHeight + window.scrollY;
+
+            // Get the total height of the document
+            const documentHeight = document.body.offsetHeight;
+
+            // Check if the scroll position is at or very near the bottom
+            // Using Math.ceil for window.scrollY can help with subpixel rendering issues
+            if (scrollPosition >= documentHeight && laoded) {
+                if(endMessageId !== 0){
+                    fetch("message?messageid="+(--endMessageId)).then(response=>response.json()).then(json =>{
+                        if(json.error){
+                            console.error("error loading message "+endMessageId+") "+json.error);
+                            return;
+                        }
+                        displayMessage(json);
+                    })
+                }
+
+            }
+        });
 
     </script>
 </head>
