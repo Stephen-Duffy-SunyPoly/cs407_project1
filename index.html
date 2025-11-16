@@ -55,12 +55,24 @@
             padding: 0.2em;
         }
 
+        .messageProfileInput {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .messageInput {
+            display: flex;
+            padding: 0.5em;
+        }
+
     </style>
 
     <script>
         let currentMessageId = -1;
         let laoded = false
         let endMessageId = -1;
+        let inputImageData = null;
 
         //format a date in a readble format
         let dateFormater = new Intl.DateTimeFormat('en-US', {
@@ -219,6 +231,37 @@
             }
         });
 
+        function chooseProfilePic() {
+            let imageInput = document.getElementById('chooseProfilePic');
+            if(imageInput.files.length > 0){
+                // console.log(imageInput.files[0]);
+                const reader = new FileReader();
+                reader.onload = (readFile) => {
+                    let img = new Image();
+                    img.onload = (e2) => {
+                        let canvas = document.createElement('canvas');
+                        canvas.width = 64
+                        canvas.height = 64
+                        let ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0,64,64);
+                        let base64 = canvas.toDataURL('image/png');
+                        // console.log(base64);
+
+                        let displayImg = document.getElementById('workingProfileImage');
+                        displayImg.src = base64;
+                        inputImageData = base64;
+                    };
+                    img.src = readFile.target.result;
+                };
+                reader.readAsDataURL(imageInput.files[0]);
+            }
+
+        }
+
+        function sendMessage(){
+
+        }
+
     </script>
 </head>
 <body>
@@ -228,7 +271,16 @@
     <div class = "contentContainer1">
         <div class = "contentContainer2">
             <div class="empty-top"></div>
-            <!-- message input here-->
+            <div class="messageInput">
+                <div class="messageProfileInput">
+                    <label for="usernameInput"></label><input type="text" id="usernameInput" placeholder="Enter a username">
+                    <img id="workingProfileImage"  alt="user selected profile image" src="" width="64" height="64">
+                    <input type="file" id="chooseProfilePic" accept="image/*" onchange="chooseProfilePic()">
+                    <button id="sendMessage" onclick="sendMessage()">Send Message</button>
+                </div>
+                <label for="messageInput"></label><textarea id="messageInput" placeholder="Enter a message" maxlength="2048" cols="256" rows="10"></textarea>
+
+            </div>
             <div id="contentStream">
             </div>
         </div>
