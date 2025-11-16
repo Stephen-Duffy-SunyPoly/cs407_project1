@@ -55,6 +55,54 @@ fastify.get("/total_messages", async function(request,reply){
     }
 })
 
+fastify.post("/postMessage", async function(request,reply){
+    let body = request.body;
+    reply.type(JSON_MIMIE);
+    if(!body){
+        reply.statusCode = 400;
+        return {error: "no message provided"};
+    }
+
+    if(!body.username){
+        reply.statusCode = 400;
+        return {error: "no username provided"};
+    }
+
+    if(!body.message){
+        reply.statusCode = 400;
+        return {error: "no message provided"};
+    }
+
+    if(body.username.length > 64){
+        reply.statusCode = 400;
+        return {error: "username too long"};
+    }
+
+    if(body.message.length > 2048){
+        reply.statusCode = 400;
+        return {error: "message too long"};
+    }
+
+    let username = body.username;
+    let message = body.message;
+    let timestamp = Date.now();
+    let profile = null
+    if(body.profile){
+        profile = body.profile;
+    }
+
+    console.log(username+" poasted ["+message+"] at "+timestamp);
+
+    //TODO put the message in the database
+    //if a profile pic was included then check if it is in the pfp table,
+    //if so then get the id for that pic, if not then add it to the table and get the new id
+
+    //add the message to the database with the reference to the profile pic
+
+    return {}
+
+})
+
 // Run the server!
 try {
     await fastify.listen({ port: 3000 })

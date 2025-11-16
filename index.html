@@ -59,11 +59,28 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            padding: 0.5em;
         }
 
         .messageInput {
             display: flex;
             padding: 0.5em;
+        }
+
+        input#usernameInput {
+            padding: 0.3em;
+            border-radius: 0.5em;
+            border-style: solid;
+            border-color: black;
+            border-width: thin;
+        }
+
+        textarea#messageInput {
+            padding: 0.5em;
+            border-radius: 0.5em;
+            border-style: solid;
+            border-color: black;
+            border-width: thin;
         }
 
     </style>
@@ -259,7 +276,52 @@
         }
 
         function sendMessage(){
+            let usernameField = document.getElementById('usernameInput');
+            let messageField = document.getElementById('messageInput');
 
+            if(!usernameField.value){
+                alert('Please enter a valid username');
+                return;
+            }
+
+            if(!messageField.value){
+                alert('Please enter a message');
+                return;
+            }
+
+            if(usernameField.value.length > 64){
+                alert('Username must be less then 64 characters');
+                return;
+            }
+
+            if(messageField.value.length > 2048){
+                alert('Message to long!');
+                return;
+            }
+
+            let createMessageObject = {
+                username: usernameField.value,
+                message: messageField.value,
+            }
+
+            if(inputImageData){
+                createMessageObject.profile = inputImageData;
+            }
+
+            fetch("postMessage",{
+                method: 'POST',
+                body: JSON.stringify(createMessageObject),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(response=>response.json()).then(json =>{
+                if(json.error){
+                    console.error("error posting message: "+json.error);
+                    alert("Failed to post message");
+                }
+            })
+
+            messageField.value = "";
         }
 
     </script>
@@ -274,8 +336,9 @@
             <div class="messageInput">
                 <div class="messageProfileInput">
                     <label for="usernameInput"></label><input type="text" id="usernameInput" placeholder="Enter a username">
-                    <img id="workingProfileImage"  alt="user selected profile image" src="" width="64" height="64">
-                    <input type="file" id="chooseProfilePic" accept="image/*" onchange="chooseProfilePic()">
+                    <img id="workingProfileImage"  alt="" src="" width="64" height="64">
+                    <button id="chooseProfilePicButton" onclick="document.getElementById('chooseProfilePic').click()">Choose Profile Picture</button>
+                    <input type="file" id="chooseProfilePic" accept="image/*" onchange="chooseProfilePic()" hidden>
                     <button id="sendMessage" onclick="sendMessage()">Send Message</button>
                 </div>
                 <label for="messageInput"></label><textarea id="messageInput" placeholder="Enter a message" maxlength="2048" cols="256" rows="10"></textarea>
