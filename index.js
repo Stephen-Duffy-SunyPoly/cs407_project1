@@ -6,6 +6,8 @@ const fastify = Fastify({
 
 import fs from 'fs'
 
+const JSON_MIMIE = "application/json"
+
 // Declare a route
 fastify.get('/', async function handler (request, reply) {
     let indexFile = fs.readFileSync('./index.html', 'utf8')
@@ -15,7 +17,7 @@ fastify.get('/', async function handler (request, reply) {
 
 fastify.get('/message', async function handler (request, reply) {
     let messageId = request.query.messageid
-    reply.type('application/json');
+    reply.type(JSON_MIMIE);
     if(!messageId) {
         reply.statusCode = 400;
         return {error: "missing messageid"};
@@ -42,6 +44,13 @@ fastify.get('/message', async function handler (request, reply) {
     }
 
     return messageObject
+})
+
+fastify.get("/total_messages", async function(request,reply){
+    reply.type(JSON_MIMIE);
+    return {
+        messages: 3
+    }
 })
 
 // Run the server!
