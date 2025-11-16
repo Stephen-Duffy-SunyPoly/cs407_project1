@@ -62,11 +62,18 @@
         let laoded = false
         let endMessageId = -1;
 
+        //format a date in a readble format
+        let dateFormater = new Intl.DateTimeFormat('en-US', {
+            dateStyle: 'short',
+            timeStyle: 'short'
+        });
+
         function createMessageBox(messageResponse){
             let username = messageResponse.username;
             let profile = messageResponse.profile;
             let message = messageResponse.message;
             let messageId = messageResponse.id;
+            let messageTime = dateFormater.format(messageResponse.time)
 
             let topBox = document.createElement('div');
             topBox.classList.add('messageBox');
@@ -86,6 +93,10 @@
             profileImage.classList.add('profile-picture');
             profileImage.src = profile;
             profileDiv.appendChild(profileImage);
+            let messageTimeSpan = document.createElement('span');
+            messageTimeSpan.classList.add('messageTime');
+            messageTimeSpan.textContent = messageTime;
+            profileDiv.appendChild(messageTimeSpan);
             profileData.appendChild(profileDiv)
             tableRow.appendChild(profileData);
             let messageData = document.createElement('div');
