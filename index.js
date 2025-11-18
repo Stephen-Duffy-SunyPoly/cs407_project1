@@ -45,7 +45,7 @@ try{
             reply.statusCode = 400;
             return {error: "invalid messageId"};
         }
-        //TODO query database for the message
+        //TODO query database for the message remember to increase the message id by 1 from what is passed in
 
         //tmp message object response
         let messageObject = {
