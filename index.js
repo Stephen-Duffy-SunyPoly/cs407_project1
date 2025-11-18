@@ -51,21 +51,13 @@ try{
             "SELECT message, username, time, image FROM message_messages JOIN message_profiles ON message_messages.profile = message_profiles.id where message_messages.id = ?;",
             [messageIdNumber+1]
         )
-        console.log("getting message: "+messageIdNumber)
-        //tmp message object response
-        // let messageObject = {
-        //     username: "USERNAME HERE",
-        //     profile: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IB2cksfwAAAARnQU1BAACxjwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB+kLCxQmKccNRh4AAAJtSURBVHja7Vq5SgRBEH2z67FeCCIIIniBGJiIrn6BgoGRgWAi5uIfCILiZxj4ARoJKmIsiBoZqCiK15rJBp67tEkPyLD2zlE13eP0gwIx6Hqvqrqmq1jAwsLCwsKCG00AtgEIn7YFoDHpopcCCK5mi1wkHYYzSwCyTHzLAGooD8wQnnUos5VlrKqs9HFgUqmPEZZ6UBvRfQW+qUsyJIe6uK/ApsxAjQEVWCu5bMTl8EljyVezB27xeYPFk/WFv9CZAPGudXA0QZGwh5hDGYCkifetz89XoJjg5/hr1AB0AWhJcABaZe8KDermtOPD5y6D31B35B1ATuPgRdl33uRIHugKUIk/CvnkdgCcEHEIvFu4Iyq9CwLy10RcboOUpdBU9oibT6UrMGTgroFqxzDoJ0OmZZ+VVwY8mGA4czqup6IwMPts3LgqIDHwBqA5BZobVAFYSEEAFlQBmExBAJQan7mHD4ImSLo39FZAGxHRMwbx50TntKs+V0XC+d/Uh1BR7gkqVsCVgYSpz7pUXYF94qytEJyxTsxJqXGUYRszE4HsLAOf4Tg6rdeOQog/ZuICHQFwLe/D/zgzB60BcO0UwJRcu+Xk32cx+Y5tH2Aqqk6DhX8s/tHvY0WkIfsm7AM+pBmzD3DRy+BrV2bgtzVI8/5/j8F/t47JSwDoj0B6IM7Pnxd9ER3OEWZvPiKXnrATm6BqNpqHIicKUWGIeBY+fr4CqwaJD+pjmcrpmsY1WNgmvUzt8EXhrFZDAOoVfJ65nJah4ceJChQq8ClxNyyh4d6z8clEbEI3Brzv73Ul48ugIecTFhYWFhYWgfEDhCqGPpbzQpsAAAAASUVORK5CYII=",
-        //     message: "sample message text. how sample do you message for your text "+messageIdNumber,
-        //     id: messageIdNumber,
-        //     time: Date.now()
-        // }
+        // console.log("getting message: "+messageIdNumber)
         if(!messageResult[0]){
             reply.statusCode = 400;
             return {error: "message not found"};
         }
-        console.log("message result")
-        console.log(messageResult)
+        // console.log("message result")
+        // console.log(messageResult)
         return {
             message: messageResult[0][0][0],
             username: messageResult[0][0][1],
@@ -129,8 +121,8 @@ try{
                 "SELECT id FROM message_profiles WHERE image = ?",
                 [profile]
             )
-            console.log("initial profile lookup")
-            console.log(profileResult);
+            // console.log("initial profile lookup")
+            // console.log(profileResult);
             //if so then get the id for that pic, if not then add it to the table and get the new id
             let profileId;
             if(profileResult[0]){
@@ -140,7 +132,7 @@ try{
                     "INSERT INTO message_profiles (image) values (?);",
                     [profile]
                 )
-                console.log(newProfileResultSetInfo);
+                // console.log(newProfileResultSetInfo);
                 profileId = newProfileResultSetInfo.insertId;
             }
             //add the message to the database with the reference to the profile pic
@@ -148,15 +140,15 @@ try{
                 "INSERT INTO message_messages (message, username, time, profile) values (?,?,?,?)",
                 [message, username, timestamp,profileId]
             )
-            console.log("added new message")
-            console.log(messageResultSetHeader);
+            // console.log("added new message")
+            // console.log(messageResultSetHeader);
         } else{
             const [messageResultSetHeader] = await databaseConnection.execute(
                 "INSERT INTO message_messages (message, username, time, profile) values (?,?,?,1)",
                 [message, username, timestamp]
             )
-            console.log("added new message")
-            console.log(messageResultSetHeader);
+            // console.log("added new message")
+            // console.log(messageResultSetHeader);
         }
 
         return {}
