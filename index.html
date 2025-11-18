@@ -205,7 +205,7 @@
                 }
 
             } else if (currentMessageId < messageNumberIn){
-                for(let i= currentMessageId;i<=messageNumberIn;i++){
+                for(let i=currentMessageId+1;i<=messageNumberIn;i++){
                     fetch("message?messageid="+i).then(response=>response.json()).then(json =>{
                         if(json.error){
                             console.error("error loading message "+i+") "+json.error);
@@ -222,7 +222,6 @@
             fetch("total_messages").then(response=>response.json()).then(json =>{
                 handleMessageCount(json);
             })
-
         }
 
         window.addEventListener('scroll', function() {
