@@ -1,6 +1,8 @@
 import mysql from 'mysql2/promise'
 import fs from 'fs'
 import Fastify from 'fastify'
+import dotenv from 'dotenv'
+dotenv.config() // load the vars form the .env file
 const fastify = Fastify({
     logger: true
 })
@@ -8,7 +10,14 @@ const fastify = Fastify({
 const JSON_MIMIE = "application/json"
 
 try{
-    const databaseConnection = await mysql.createConnection({})
+    const databaseConnection = await mysql.createConnection({
+        host: process.env.DATABASE_HOST,
+        port: process.env.DATABASE_PORT,
+        user: process.env.DATABASE_USER,
+        password: process.env.DATABASE_PASSWORD,
+        database: process.env.DATABASE_NAME,
+        rowsAsArray: true
+    });
 
 
     // main page
@@ -52,9 +61,14 @@ try{
 
     fastify.get("/total_messages", async function(request,reply){
         reply.type(JSON_MIMIE);
-        //TODO query the database for the most recent message
+
+        const [results] = await databaseConnection.execute(
+            'SELECT count(id) FROM message_messages'
+        );
+        //for some reason it returns a 2D array
+
         return {
-            messages: 256
+            messages: results[0][0]
         }
     })
 
@@ -90,17 +104,44 @@ try{
         let message = body.message;
         let timestamp = Date.now();
         let profile = null
-        if(body.profile){
+        if(body.profile) {
             profile = body.profile;
         }
-
-        console.log(username+" poasted ["+message+"] at "+timestamp);
-
-        //TODO put the message in the database
         //if a profile pic was included then check if it is in the pfp table,
-        //if so then get the id for that pic, if not then add it to the table and get the new id
-
-        //add the message to the database with the reference to the profile pic
+        if(profile){
+            const [profileResult] = await databaseConnection.execute(
+                "SELECT id FROM message_profiles WHERE image = ?",
+                [profile]
+            )
+            console.log("initial profile lookup")
+            console.log(profileResult);
+            //if so then get the id for that pic, if not then add it to the table and get the new id
+            let profileId = 0;
+            if(profileResult[0]){
+                profileId = profileResult[0][0];
+            } else {
+                const [newProfileResultSetInfo] = await databaseConnection.execute(
+                    "INSERT INTO message_profiles (image) values (?);",
+                    [profile]
+                )
+                console.log(newProfileResultSetInfo);
+                profileId = newProfileResultSetInfo.insertId;
+            }
+            //add the message to the database with the reference to the profile pic
+            const [messageResultSetHeader] = await databaseConnection.execute(
+                "INSERT INTO message_messages (message, username, time, profile) values (?,?,?,?)",
+                [message, username, timestamp,profileId]
+            )
+            console.log("added new message")
+            console.log(messageResultSetHeader);
+        } else{
+            const [messageResultSetHeader] = await databaseConnection.execute(
+                "INSERT INTO message_messages (message, username, time, profile) values (?,?,?,1)",
+                [message, username, timestamp]
+            )
+            console.log("added new message")
+            console.log(messageResultSetHeader);
+        }
 
         return {}
 
@@ -119,5 +160,4 @@ try{
 
 } catch (e){
     console.error(e)
-    return;
 }
