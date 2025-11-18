@@ -194,7 +194,7 @@
             laoded = true;
             if(currentMessageId === -1){
                 endMessageId = Math.max(messageNumberIn-15,0)
-                for(let i=Math.max(messageNumberIn-15,0);i<messageNumberIn;i++){
+                for(let i=Math.max(messageNumberIn-15,0);i<=messageNumberIn;i++){
                     fetch("message?messageid="+i).then(response=>response.json()).then(json =>{
                         if(json.error){
                             console.error("error loading message "+i+") "+json.error);
