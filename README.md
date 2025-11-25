@@ -17,6 +17,7 @@ Descripton=Fantastic message board website service
 After=network.target
 
 [Service]
+WorkingDirectory=/path/to/project
 ExecStart=/path/to/project/run.sh
 
 [Install]
@@ -50,3 +51,10 @@ After your message, username and profile pic are all set you can click on the se
 ![w1.png](Screenshots/w1.png)
 
 ![w2.png](Screenshots/w2.png)
+
+## Security and hardening steps
+The database has had a custom password set for the root user.  
+The website uses its own user to connect to the database that only allows access from the local machine, and also only allows accesses to the database for this application   
+The webserver has been provided an SSL certificate to allow for the use of HTTPS
+The webserver uses prepared statements for all database queries to prevent injection attacks
+Database credentials are provided to the webserver via environment variables 
