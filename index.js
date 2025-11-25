@@ -158,7 +158,7 @@ try{
     // start the web server
     try {
         await fastify.listen({
-                port: 3000,
+                port: process.env.SERVICE_PORT,
                 host: "0.0.0.0"
             })
     } catch (err) {
