@@ -39,7 +39,7 @@ The user in the web browser can interact with the web server to post new message
 
 ## Usage
 For how to set the service up look at the setup section above
-To use the service, open your web browser and navigate to the ipaddress of this severer. The default port is 3000 but check what is configured in your setup.  
+To use the service, open your web browser and navigate to the ipaddress of this severer. The default port is 3000 but check what is configured in your setup. If useing https then you will need to specify the https protocol.
 Once you have loaded the page, you can scroll down to see the conversation that has taken place.   
 At the top of the page is a box for you to enter your own message into. The smaller text box next to the message box is where you can set your username.  
 Optionally you can choose an image from your computer to use as your profile picture.   
