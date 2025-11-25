@@ -20,8 +20,9 @@ After=network.target
 ExecStart=/path/to/project/run.sh
 
 [Install]
-WnatedBy=multi-user.target
+WantedBy=multi-user.target
 ```
+9. mark `run.sh` as executable 
 
 ## Running
 ```shell
