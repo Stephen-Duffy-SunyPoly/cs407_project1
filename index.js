@@ -9,12 +9,14 @@ const USE_HTTPS = process.env.USE_HTTPS === 'true' || process.env.USE_HTTPS === 
 
 const fastify = USE_HTTPS ? Fastify({
     logger: true,
+    http2: true,
     https: {
         key: fs.readFileSync(process.env.SSL_PRIVATE_KEY),
         cert: fs.readFileSync(process.env.SSL_CERT)
     }
 }): Fastify({
-    logger: true
+    logger: true,
+    http2: true
 })
 
 const JSON_MIMIE = "application/json"
