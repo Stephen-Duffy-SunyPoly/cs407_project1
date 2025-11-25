@@ -9,7 +9,7 @@ A simple message board system
 4. run the SQL quererys in `init_database_setup.sql` make sure to set a good account password
 5. copy `.env.example` to `.env`
 6. edit `.env` set the database password you created earlier in both the `DATABASE_URL` and `DATABASE_PASSWORD` fields. NOTE: make sure the password in the `DATABASE_URL` is URI encoded 
-7. configure any other env changes
+7. configure any other env changes like SSL
 8. create the auto start service with the following service file. Make sure you change the file path to where you place this repo
 ```service
 [Unit]

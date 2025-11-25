@@ -4,7 +4,16 @@ import Fastify from 'fastify'
 import dotenv from 'dotenv'
 
 dotenv.config() // load the vars form the .env file
-const fastify = Fastify({
+
+const USE_HTTPS = process.env.USE_HTTPS === 'true' || process.env.USE_HTTPS === '1'
+
+const fastify = USE_HTTPS ? Fastify({
+    logger: true,
+    https: {
+        key: fs.readFileSync(process.env.SSL_PRIVATE_KEY),
+        cert: fs.readFileSync(process.env.SSL_CERT)
+    }
+}): Fastify({
     logger: true
 })
 
