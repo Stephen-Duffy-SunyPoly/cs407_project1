@@ -83,6 +83,17 @@
             border-width: thin;
         }
 
+        div.sendMessageButtonDiv{
+            padding: 0.5em;
+        }
+
+        button#sendMessage{
+            padding: 0.7em;
+            border-radius: 0.5em;
+            border-style: solid;
+            border-width: thin;
+        }
+
     </style>
 
     <script>
@@ -338,7 +349,9 @@
                     <img id="workingProfileImage"  alt="" src="" width="64" height="64">
                     <button id="chooseProfilePicButton" onclick="document.getElementById('chooseProfilePic').click()">Choose Profile Picture</button>
                     <input type="file" id="chooseProfilePic" accept="image/*" onchange="chooseProfilePic()" hidden>
-                    <button id="sendMessage" onclick="sendMessage()">Send Message</button>
+                    <div class="sendMessageButtonDiv">
+                        <button id="sendMessage" onclick="sendMessage()">Send Message</button>
+                    </div>
                 </div>
                 <label for="messageInput"></label><textarea id="messageInput" placeholder="Enter a message" maxlength="2048" cols="256" rows="10"></textarea>
 
