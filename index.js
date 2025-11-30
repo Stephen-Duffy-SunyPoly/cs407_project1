@@ -32,7 +32,6 @@ try{
 
 
     setInterval( async () => {
-        console.log("pinging database")
         try {
             await databaseConnection.query("SELECT 1;")
         }catch (err) {
@@ -50,7 +49,7 @@ try{
                 })
             }
         }
-    }, 10000)
+    }, 30000)
 
     // main page
     fastify.get('/', async function handler (request, reply) {
