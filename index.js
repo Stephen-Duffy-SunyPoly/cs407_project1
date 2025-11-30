@@ -15,14 +15,13 @@ const fastify = USE_HTTPS ? Fastify({
         cert: fs.readFileSync(process.env.SSL_CERT)
     }
 }): Fastify({
-    logger: true,
-    http2: true
+    logger: true
 })
 
 const JSON_MIMIE = "application/json"
 
 try{
-    const databaseConnection = await mysql.createConnection({
+    let databaseConnection = await mysql.createConnection({
         host: process.env.DATABASE_HOST,
         port: process.env.DATABASE_PORT,
         user: process.env.DATABASE_USER,
@@ -31,6 +30,27 @@ try{
         rowsAsArray: true
     });
 
+
+    setInterval( async () => {
+        console.log("pinging database")
+        try {
+            await databaseConnection.query("SELECT 1;")
+        }catch (err) {
+            if(err) {
+                //reconnect to the database
+                await databaseConnection.destroy()
+                console.log("Reconnecting to database...")
+                databaseConnection = await mysql.createConnection({
+                host: process.env.DATABASE_HOST,
+                port: process.env.DATABASE_PORT,
+                user: process.env.DATABASE_USER,
+                password: process.env.DATABASE_PASSWORD,
+                database: process.env.DATABASE_NAME,
+                rowsAsArray: true
+                })
+            }
+        }
+    }, 10000)
 
     // main page
     fastify.get('/', async function handler (request, reply) {
